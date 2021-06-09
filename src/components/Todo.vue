@@ -1,12 +1,15 @@
 <template>
-  <AddTodo @add-item="onItemAdd" />
-  <TodoItem
-    v-for="item in items"
-    v-bind:key="item.id"
-    v-bind:itemProps="item"
-    v-on:item-completed="onItemComplete"
-    v-on:delete-item="onItemDelete"
-  />
+  <div v-if="authen.isAuthenticated">
+    <AddTodo @add-item="onItemAdd" />
+    <TodoItem
+      v-for="item in items"
+      v-bind:key="item.id"
+      v-bind:itemProps="item"
+      v-on:item-completed="onItemComplete"
+      v-on:delete-item="onItemDelete"
+    />
+  </div>
+  <p v-else style="text-align: center">Not authen</p>
 </template>
 
 <script>
@@ -14,10 +17,12 @@ import { ref } from 'vue'
 import axios from 'axios'
 import TodoItem from './TodoItem'
 import AddTodo from './AddTodo.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Todo',
   components: { TodoItem, AddTodo },
+  computed: mapState(['items', 'authen']),
   setup() {
     const defaultItems = ref([])
 
@@ -63,7 +68,7 @@ export default {
     }
 
     return {
-      items: defaultItems,
+      // items: defaultItems,
       onItemComplete,
       onItemDelete,
       onItemAdd
