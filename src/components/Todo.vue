@@ -1,5 +1,6 @@
 <template>
   <div v-if="authen.isAuthenticated">
+    <button @click="getAllTodos">Reload data</button>
     <AddTodo @add-item="onItemAdd" />
     <TodoItem
       v-for="item in items"
@@ -22,22 +23,24 @@ import { mapState } from 'vuex'
 export default {
   name: 'Todo',
   components: { TodoItem, AddTodo },
-  computed: mapState(['items', 'authen']),
+
   setup() {
     const defaultItems = ref([])
 
-    const getAllTodos = async () => {
-      try {
-        const res = await axios.get(
-          'https://jsonplaceholder.typicode.com/todos?_limit=10'
-        )
-        defaultItems.value = res.data
-      } catch (error) {
-        console.log(error)
-      }
-    }
+    // const getAllTodos = async () => {
+    //   try {
+    //     const res = await axios.get(
+    //       'https://jsonplaceholder.typicode.com/todos?_limit=10'
+    //     )
+    //     defaultItems.value = res.data
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // }
 
-    getAllTodos()
+    // getAllTodos()
+
+    // const defaultItems = getAllTodos()
 
     const onItemComplete = id => {
       defaultItems.value = defaultItems.value.map(todo => {
@@ -72,6 +75,20 @@ export default {
       onItemComplete,
       onItemDelete,
       onItemAdd
+    }
+  },
+  computed: mapState(['items', 'authen']),
+  methods: {
+    async getAllTodos() {
+      try {
+        const res = await axios.get(
+          'https://jsonplaceholder.typicode.com/todos?_limit=10'
+        )
+
+        this.$store.dispatch('setupItems', res.data)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

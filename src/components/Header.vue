@@ -5,18 +5,30 @@
       <li>Home</li>
       <li>About</li>
       <li v-if="authen.isAuthenticated">
-        Total item: {{ items.length }} <button>Logout</button>
+        Total item: {{ items.length }}
+        <button @click="loginOrLogOut">Logout</button>
       </li>
-      <li v-else><button>Login</button></li>
+      <li v-else><button @click="loginOrLogOut">Login</button></li>
     </ul>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   name: 'Header',
-  computed: mapState(['items', 'authen'])
+  computed: {
+    items() {
+      return this.$store.state.items
+    },
+    authen() {
+      return this.$store.state.authen
+    }
+  },
+  methods: {
+    loginOrLogOut() {
+      this.$store.commit('TOGGLE_AUTH')
+    }
+  }
 }
 </script>
 
