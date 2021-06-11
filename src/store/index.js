@@ -2,33 +2,23 @@ import { createStore } from 'vuex'
 
 const storeData = {
   state: {
-    items: [
-      {
-        userId: 1,
-        id: 1,
-        title: 'delectus aut autem',
-        completed: false
-      },
-      {
-        userId: 1,
-        id: 2,
-        title: 'quis ut nam facilis et officia qui',
-        completed: false
-      },
-      {
-        userId: 1,
-        id: 3,
-        title: 'fugiat veniam minus',
-        completed: false
-      }
-    ],
+    items: [],
     authen: {
-      isAuthenticated: false
+      isAuthenticated: true
     }
   },
   actions: {
     setupItems(context, items) {
       context.commit('SETUP_ITEMS', items)
+    },
+    markComplete({ commit }, itemId) {
+      commit('MARK_COMPLETE', itemId)
+    },
+    deleteItems({ commit }, itemId) {
+      commit('DELETE_ITEMS', itemId)
+    },
+    addItem({ commit }, item) {
+      commit('ADD_ITEM', item)
     }
   },
   mutations: {
@@ -37,6 +27,18 @@ const storeData = {
     },
     SETUP_ITEMS(state, items) {
       state.items = items
+    },
+    MARK_COMPLETE(state, itemId) {
+      state.items.map(item => {
+        if (item.id === itemId) item.isCompleted = !item.isCompleted
+        // return todo
+      })
+    },
+    DELETE_ITEMS(state, itemId) {
+      state.items = state.items.filter(item => item.id !== itemId)
+    },
+    ADD_ITEM(state, item) {
+      state.items.unshift(item)
     }
   }
 }
